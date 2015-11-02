@@ -33,7 +33,7 @@ module Delayed
                           :failed_at, :locked_at, :locked_by, :handler
         end
 
-	scope :by_priority, lambda { order(ENV.fetch("DELAYED_JOB_RANKING_FUNCTION", "priority ASC, run_at ASC")) }
+        scope :by_priority, lambda { order(ENV.fetch("DELAYED_JOB_RANKING_FUNCTION", "priority ASC, run_at ASC")) }
 
         before_save :set_default_run_at
 
@@ -88,7 +88,7 @@ module Delayed
 
         def self.reserve_with_scope_using_optimized_sql(ready_scope, worker, now)
           case connection.adapter_name
-          when "PostgreSQL"
+          when "PostgreSQL", "PostGIS"
             # Custom SQL required for PostgreSQL because postgres does not support UPDATE...LIMIT
             # This locks the single record 'FOR UPDATE' in the subquery
             # http://www.postgresql.org/docs/9.0/static/sql-select.html#SQL-FOR-UPDATE-SHARE
